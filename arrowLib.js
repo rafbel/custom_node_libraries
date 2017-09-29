@@ -132,9 +132,7 @@ var userQuery = function (options, callback) {
             }
             else
             {
-                //console.log(JSON.stringify(usersObjectList));
                 excelSheetInsert(users,usersObjectList);
-                // console.log(usersObjectList.username + " " + usersObjectList.cust
                 options.where._id = { "$lt": usersObjectList[usersObjectList.length - 1].id };
                 userQuery(options, callback);
              }//inner else

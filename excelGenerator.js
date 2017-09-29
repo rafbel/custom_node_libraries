@@ -90,7 +90,7 @@ function Excel()
     };
     
     //Saves the workbook with the file name as specified (extension is not to be provided in the parameter)
-    this.saveFile = function(fileName)
+    this.saveFile = function(fileName,onSuccess)
     {
         var newFileName = fileName + ".xlsx";
         workbook.write(newFileName , function (error, stats) 
@@ -102,6 +102,7 @@ function Excel()
             else
             {
                 console.log("Excel file " + newFileName + " created.");
+                onSuccess();
             }
         });
     };
