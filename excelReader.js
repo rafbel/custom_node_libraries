@@ -1,9 +1,17 @@
 var XLSX = require('xlsx');
 
+var workbook;
+var worksheetArray;
 
-var workbook = XLSX.readFile('Programa de Excelência em Varejo.xlsx');
+
+function initialize(workbookFile)
+{
+    workbook = XLSX.readFile(workbookFile);
+    worksheetArray = workbook['SheetNames'];
+}
+
 //array de todos os sheets do workbook recebido
-worksheetArray = workbook['SheetNames'];
+
 /// TODO
 ///     para todo worksheet que tiver pegar as suas chaves
 ///     retornar os valores dessa chave e de qual worksheet se trata
@@ -29,9 +37,6 @@ worksheetArray = workbook['SheetNames'];
 // var s = getNumberOfColumns(user);
 // var p = getNumberOfRows(user);
 // console.log(getNumberOfInvalidValuesForAttribute(user, 'Nome do respondente', ['Teste']));
-
-
-
 
 //*************Inicio Funções auxiliares*****************\\
 
@@ -237,17 +242,9 @@ function getNumberOfAttributeEqualsTo(sheet, attributeName, attributeValue) {
 } //getNumberOfValidValuesForAttribute
 
 
-
-
-
 //*************Fim Funções exportadas pelo módulo*****************\\
 
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-
-
+exports.initialize = initialize;
 exports.getWorkbookAsJson = getWorkbookAsJson;
 exports.getAllKeys = getAllKeys;
 exports.getAllValues = getAllValues;
