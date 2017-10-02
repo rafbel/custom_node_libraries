@@ -1,15 +1,5 @@
 var XLSX = require('xlsx');
 
-var workbook;
-var worksheetArray;
-
-
-function initialize(workbookFile)
-{
-    workbook = XLSX.readFile(workbookFile);
-    worksheetArray = workbook['SheetNames'];
-}
-
 //array de todos os sheets do workbook recebido
 
 /// TODO
@@ -93,6 +83,37 @@ function getWorkbookAsJson(workbookName) {
     workbookAsJson = to_json(workbook);
     return workbookAsJson;
 } //initializer
+
+
+/*
+* params: arquivo Excel.xls    
+* returns: um array com arrays de informação de cada linha do arquivo
+*/
+function getWorkbookAsArray(workbookFile)
+{
+    var workbook = XLSX.readFile(workbookFile);
+    
+    var workbookArray = [];
+    var worksheetArray = workbook['SheetNames'];
+    
+    for (var i = 0; i < worksheetArray.length; i++)
+    {
+        var sheet = workbook.Sheets[worksheetArray[i]];
+        var sheetData = [];
+        
+        for (var key in sheet)
+        {
+            if (sheet[key].v != "undefined")
+            {
+                sheetData.push(sheet[key].v);    
+            }  
+        }
+        workbookArray.push(sheetData);
+    }
+    
+    return workbookArray;
+    
+}
 
 /////////////////////////////////////////////////////////
 //
@@ -244,7 +265,7 @@ function getNumberOfAttributeEqualsTo(sheet, attributeName, attributeValue) {
 
 //*************Fim Funções exportadas pelo módulo*****************\\
 
-exports.initialize = initialize;
+exports.getWorkbookAsArray = getWorkbookAsArray;
 exports.getWorkbookAsJson = getWorkbookAsJson;
 exports.getAllKeys = getAllKeys;
 exports.getAllValues = getAllValues;
