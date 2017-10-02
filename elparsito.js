@@ -10,20 +10,28 @@ worksheetArray = workbook['SheetNames'];
 ///     poder printar todas as chaves de uma dada chave
 
 
-///////////main stuff\\\\\\\\\\\
+///////////Exemplo de testes para o modulo\\\\\\\\\\\
 
-//recebe em formato JSON o xls
-var w = getWorkbookAsJson('Programa de Excelência em Varejo.xlsx');
-// console.log(w);
-//recebe os nomes dos sheets
-var sheets = getWorksheetNameArray(workbook);
-// console.log(sheets);
-var user = w[sheets[0]];
-var supplychain = w[sheets[1]];
-// console.log(getAllKeys(supplychain));
-// console.log(getAllKeys(user));
-var o = getAllValues(user)
-// console.log(getAllValues(user));
+// //recebe em formato JSON o xls
+// var w = getWorkbookAsJson('Programa de Excelência em Varejo.xlsx');
+// // console.log(w);
+// //recebe os nomes dos sheets
+// var sheets = getWorksheetNameArray(workbook);
+// // console.log(sheets);
+// var user = w[sheets[0]];
+// var supplychain = w[sheets[1]];
+// // console.log(getAllKeys(supplychain));
+// // console.log(getAllKeys(user));
+// var o = getAllValues(user)
+// // console.log(getAllValues(user));
+// var q = getSpecifiedAttribute(user, 'Email');
+// // console.log(getSpecifiedAttribute(user,'Email'));
+// var s = getNumberOfColumns(user);
+// var p = getNumberOfRows(user);
+// console.log(getNumberOfInvalidValuesForAttribute(user, 'Nome do respondente', ['Teste']));
+
+
+
 
 //*************Inicio Funções auxiliares*****************\\
 
@@ -117,30 +125,19 @@ function getAllKeys(sheet) {
 //
 ////////////////////////////////////////////////////////
 function getAllValues(sheet) {
+    var resultList = [];
     var keyList = getAllKeys(sheet);
-    //console.log(keyList);
-    console.log(keyList.length);
     for (var j = 0; j < keyList.length; j++) {
-        var atribute = keyList[j];
-        for (i = 0; i < sheet.length; i++) {
-            // console.log(keyList[i]);
-            console.log(sheet[i]);
-            //.keyList[i]
+        var tempList = [];
+        var attribute = keyList[j];
+        for (var i = 0; i < sheet.length; i++) {
+            tempList.push(sheet[i][attribute]);
         }
+        resultList.push(tempList);
     }
-    // return list.sort();
+    return resultList;
 } //getAllValues
 
-/////////////////////////////////////////////////////////
-//
-//  Recebe um worksheet como parâmetro
-//  Função que retorna um array com os pares chave-valor
-//  para cada item no worksheet
-//
-////////////////////////////////////////////////////////
-function getAllPairKeyValue(sheet) {
-
-} //getAllPairKeyValue
 
 /////////////////////////////////////////////////////////
 //
@@ -149,18 +146,31 @@ function getAllPairKeyValue(sheet) {
 //  determinado atributo.
 //
 ////////////////////////////////////////////////////////
-function getSpecifiedAttribute(sheet, atributeName) {
-
+function getSpecifiedAttribute(sheet, attributeName) {
+    var resultList = [];
+    var attribute = attributeName;
+    for (var i = 0; i < sheet.length; i++) {
+        resultList.push(sheet[i][attribute]);
+    }
+    return resultList;
 } //getSpecifiedAttribute
 
 /////////////////////////////////////////////////////////
 //
 //  Recebe um worksheet como parâmetro.
 //  Retorna o número linhas em um worksheet
+//  Não retorna a linha referente aos nomes dos atributos
 //  
 ////////////////////////////////////////////////////////
 function getNumberOfRows(sheet) {
-
+    var keyList = getAllKeys(sheet);
+    var attribute = keyList[0];
+    var count = 0;
+    for (var i = 0; i < sheet.length; i++) {
+        if (sheet[i][attribute])
+            count++;
+    }
+    return count;
 } //getNumberOfRows
 
 /////////////////////////////////////////////////////////
@@ -170,7 +180,13 @@ function getNumberOfRows(sheet) {
 //  
 ////////////////////////////////////////////////////////
 function getNumberOfColumns(sheet) {
-
+    var count = 0;
+    for (var j in sheet[0]) {
+        var sub_key = j;
+        var sub_val = sheet[j];
+        count++;
+    }
+    return count;
 } //getNumberOfRows
 
 /////////////////////////////////////////////////////////
@@ -180,8 +196,20 @@ function getNumberOfColumns(sheet) {
 //  "válidos".
 //
 ////////////////////////////////////////////////////////
-function getNumberOfValidValuesForAttribute(sheet, attributeName) {
-
+function getNumberOfInvalidValuesForAttribute(sheet, attributeName, invalidValues) {
+    var attribute = attributeName;
+    var count = 0;
+    var j = 0;
+    while (j < invalidValues.length) {
+        for (var i = 0; i < sheet.length; i++) {
+            var temp = sheet[i][attribute];
+            if (temp === invalidValues[j]){
+                count++;
+            }
+        }
+        j++;
+    }
+    return count;
 } //getNumberOfValidValuesForAttribute
 
 /////////////////////////////////////////////////////////
@@ -193,18 +221,20 @@ function getNumberOfValidValuesForAttribute(sheet, attributeName) {
 //
 ////////////////////////////////////////////////////////
 function getNumberOfAttributeEqualsTo(sheet, attributeName, attributeValue) {
-
+    var attribute = attributeName;
+    var count = 0;
+    var j = 0;
+    while (j < attributeValue.length) {
+        for (var i = 0; i < sheet.length; i++) {
+            var temp = sheet[i][attribute];
+            if (temp === attributeValue[j]){
+                count++;
+            }
+        }
+        j++;
+    }
+    return count;
 } //getNumberOfValidValuesForAttribute
-
-/////////////////////////////////////////////////////////
-//
-//  Recebe um worksheet e o atributo que será analisado.  
-//  Função que retorna o número de linhas não preenchidos
-//
-////////////////////////////////////////////////////////
-function getNumberOfUnfilledValuesForAttribute(sheet, attributeName) {
-
-} //getNumberOfUnfilledValuesForAttribute
 
 
 
@@ -221,10 +251,8 @@ function getNumberOfUnfilledValuesForAttribute(sheet, attributeName) {
 exports.getWorkbookAsJson = getWorkbookAsJson;
 exports.getAllKeys = getAllKeys;
 exports.getAllValues = getAllValues;
-exports.getAllPairKeyValue = getAllPairKeyValue;
 exports.getSpecifiedAttribute = getSpecifiedAttribute;
 exports.getNumberOfRows = getNumberOfRows;
 exports.getNumberOfColumns = getNumberOfColumns;
-exports.getNumberOfValidValuesForAttribute = getNumberOfValidValuesForAttribute;
+exports.getNumberOfInvalidValuesForAttribute = getNumberOfInvalidValuesForAttribute;
 exports.getNumberOfAttributeEqualsTo = getNumberOfAttributeEqualsTo;
-exports.getNumberOfUnfilledValuesForAttribute = getNumberOfUnfilledValuesForAttribute;
