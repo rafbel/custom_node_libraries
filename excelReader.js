@@ -98,20 +98,10 @@ function getWorkbookAsArray(workbookFile)
     
     for (var i = 0; i < worksheetArray.length; i++)
     {
-        var sheet = workbook.Sheets[worksheetArray[i]];
-        var sheetData = [];
-        
-        for (var key in sheet)
-        {
-            if (sheet[key].v != "undefined")
-            {
-                sheetData.push(sheet[key].v);    
-            }  
-        }
-        workbookArray.push(sheetData);
+        workbookArray.push(XLSX.utils.sheet_to_json(workbook.Sheets[worksheetArray[i]],{header:1}));
     }
     
-    return workbookArray;
+    return workbookArray;                                        
     
 }
 
