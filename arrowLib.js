@@ -1,8 +1,8 @@
 /* 
 *   @author: Rafael Bellotti 
-*   @version: 1.2
-*   @last_update: 19/09/2017 - 15:02
-*   @changelog: Adicionado query de todos os usuários do Cloud
+*   @version: 1.3
+*   @last_update: 03/10/2017 - 11:12
+*   @changelog: Adicionado criação e atualização de usuários no Cloud
 */
 
 var ArrowDB;
@@ -38,7 +38,7 @@ var queryAllCustomObjects = function (options, allObjectsArray, callback) {
         limit: 1000,
     }, function (error, result) {
         if (error) {
-            console.error("SS query error :" + error.message);
+            console.error("Custom object query error :" + error.message);
         } else {
             var objectList = result.body.response[options.classname];
 
@@ -170,6 +170,42 @@ var queryAllUsers = function(options, userArray, callback)
     });
 };
 
+var createUser = function(options,callback)
+{
+    arrowDBApp.usersCreate(options, function(error, result) 
+    {
+        if (error) 
+        {
+            console.error(error.message);
+        } 
+        else 
+        {
+            var response = result.body.response.users[0];
+            console.log("User created: " + response.id);
+            
+            callback(response);
+        }
+    });
+};
+
+var updateUser = function(options,callback)
+{
+    arrowDBApp.usersUpdate(options, function(error, result) 
+    {
+        if (error) 
+        {
+            console.error(error.message);
+        } 
+        else 
+        {
+            var response = result.body.response.users[0]
+            console.log("User " + response.id + " updated");
+            
+            callback(response);
+        }
+    });
+};
+
 //////////////////////// Photos ////////////////////////
 
 var photoQuery = function (fields, callback) {
@@ -181,7 +217,7 @@ var photoQuery = function (fields, callback) {
             callback(result.body.response.photos);
         }
     });
-}
+};
 
 var photoUpdate = function (options, callback) {
     arrowDBApp.photosUpdate(options, function (error, result) {
@@ -194,7 +230,7 @@ var photoUpdate = function (options, callback) {
             callback(updatedPhoto);
         }
     });
-}
+};
 
 var updateAllPhotos = function (photoIds, custom_fields, i, allPhotos, callback) {
 
@@ -236,6 +272,8 @@ exports.batchDeleteCustomObjects = batchDeleteCustomObjects;
 exports.userLogin = userLogin;
 exports.userQuery = userQuery;
 exports.queryAllUsers = queryAllUsers;
+exports.createUser = createUser;
+exports.updateUser = updateUser;
 
 exports.photoQuery = photoQuery;
 exports.photoUpdate = photoUpdate;
