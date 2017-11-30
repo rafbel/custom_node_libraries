@@ -18,4 +18,33 @@ function dateToString(dateString)
     
 }
 
+function getSquareRoot(x)
+{
+    var s = 0;
+    var e = x;
+    
+    var precision = 0.00001;
+    
+    var m = (s + e)/2;
+    
+    while (precision < (e - s))
+    {
+        m = (s + e)/2;
+        
+        if (Math.pow(m,2) > x)
+        {
+            e = m;
+        }
+        else
+        {
+            s = m;
+        }
+        
+    }
+    
+    return m;
+}
+
+
 exports.dateToString = dateToString;
+exports.getSquareRoot = getSquareRoot;
